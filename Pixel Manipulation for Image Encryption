@@ -1,0 +1,43 @@
+from PIL import Image
+import random
+
+def encrypt_image(image_path, key):
+    img = Image.open(image_path)
+    pixels = img.load()
+
+    width, height = img.size
+
+    random.seed(key)
+
+    for x in range(width):
+        for y in range(height):
+            r, g, b = pixels[x, y]
+            pixels[x, y] = (
+                r ^ random.randint(0, 255),
+                g ^ random.randint(0, 255),
+                b ^ random.randint(0, 255)
+            )
+
+    encrypted_image_path = "encrypted_image.png"
+    img.save(encrypted_image_path)
+    print(f"Encrypted image saved as {encrypted_image_path}")
+    return encrypted_image_path
+
+
+def decrypt_image(image_path, key):
+    return encrypt_image(image_path, key)
+
+mode = input("Would you like to encrypt or decrypt an image? ").lower()
+image_path = input("Enter the path of the image: ")
+key = input("Enter the encryption/decryption key: ")
+
+if mode == 'encrypt':
+    encrypted_image = encrypt_image(image_path, key)
+    print(f"Image successfully encrypted: {encrypted_image}")
+
+elif mode == 'decrypt':
+    decrypted_image = decrypt_image(image_path, key)
+    print(f"Image successfully decrypted: {decrypted_image}")
+
+else:
+    print("Invalid option! Please choose 'encrypt' or 'decrypt'.")
